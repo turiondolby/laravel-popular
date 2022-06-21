@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\SeriesShowController;
+use App\Http\Controllers\SeriesIndexController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,3 +18,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('series', SeriesIndexController::class);
+Route::get('series/{series:slug}', SeriesShowController::class);
