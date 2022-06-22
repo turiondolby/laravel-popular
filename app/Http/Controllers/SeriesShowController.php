@@ -8,11 +8,7 @@ class SeriesShowController extends Controller
 {
     public function __invoke(Series $series)
     {
-        $series->visits()->create([
-            'data' => [
-                'test' => true
-            ]
-        ]);
+        $series->visit();
 
         return view('series.show', compact('series'));
     }
