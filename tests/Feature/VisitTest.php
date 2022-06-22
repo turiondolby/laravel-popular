@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Series;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -80,4 +81,14 @@ it('does not create duplicate visits with the same data', function () {
     ]);
 
     expect($series->visits->count())->toBe(1);
+});
+
+it('creates visits after a daily timeframe', function () {
+    $series = Series::factory()->create();
+
+    $series->visit()->withIp();
+    Carbon::setTestNow(now()->addDay()->addHour());
+    $series->visit()->withIp();
+
+    expect($series->visits->count())->toBe(2);
 });

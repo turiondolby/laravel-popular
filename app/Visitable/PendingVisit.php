@@ -3,16 +3,20 @@
 namespace App\Visitable;
 
 use App\Models\User;
+use App\Models\Visit;
 use Illuminate\Database\Eloquent\Model;
 
 class PendingVisit
 {
     protected $model;
     protected $attributes = [];
+    protected $interval;
 
     public function __construct(Model $model)
     {
         $this->model = $model;
+
+        $this->interval = now()->subDay();
     }
 
     public function withUser(?User $user = null)
@@ -45,11 +49,20 @@ class PendingVisit
             ->toArray();
     }
 
+    protected function shouldBeLoggedAgain(Visit $visit)
+    {
+        return ! $visit->wasRecentlyCreated && $visit->created_at->lt($this->interval);
+    }
+
     public function __destruct()
     {
-        $this->model->visits()->firstOrCreate(
+        $visit = $this->model->visits()->latest()->firstOrCreate(
             $this->buildJsonColumns(),
             ['data' => $this->attributes]
         );
+
+        $visit->when($this->shouldBeLoggedAgain($visit), function () use ($visit) {
+            $visit->replicate()->save();
+        });
     }
 }
