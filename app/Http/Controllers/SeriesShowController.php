@@ -8,7 +8,12 @@ class SeriesShowController extends Controller
 {
     public function __invoke(Series $series)
     {
-        $series->visit()->withIp()->withData(['cats' => true]);
+        auth()->loginUsingId(1);
+
+        $series->visit()
+            ->withIp()
+            ->withUser()
+            ->withData(['cats' => true]);
 
         return view('series.show', compact('series'));
     }
