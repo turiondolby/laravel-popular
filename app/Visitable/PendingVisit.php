@@ -17,7 +17,17 @@ class PendingVisit
     public function withIp($ip = null)
     {
         $this->attributes['ip'] = $ip ?? request()->ip();
+
+        return $this;
     }
+
+    public function withData($data)
+    {
+        $this->attributes = array_merge($this->attributes, $data);
+
+        return $this;
+    }
+
     public function __destruct()
     {
         $this->model->visits()->create([

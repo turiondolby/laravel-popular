@@ -32,3 +32,15 @@ it('creates a visit with the given ip address', function () {
         'ip' => 'cats'
     ]);
 });
+
+it('creates a visit with custom data', function () {
+    $series = Series::factory()->create();
+
+    $series->visit()->withData([
+        'cats' => true
+    ]);
+
+    expect($series->visits->first()->data)->toMatchArray([
+        'cats' => true
+    ]);
+});
