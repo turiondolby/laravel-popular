@@ -36,10 +36,20 @@ class PendingVisit
         return $this;
     }
 
+    protected function buildJsonColumns()
+    {
+        return collect($this->attributes)
+            ->mapWithKeys(function ($value, $index) {
+                return ['data->' . $index => $value];
+            })
+            ->toArray();
+    }
+
     public function __destruct()
     {
-        $this->model->visits()->create([
-            'data' => $this->attributes
-        ]);
+        $this->model->visits()->firstOrCreate(
+            $this->buildJsonColumns(),
+            ['data' => $this->attributes]
+        );
     }
 }
