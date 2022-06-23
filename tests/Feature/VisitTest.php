@@ -96,12 +96,62 @@ it('does not create visits within the timeframe', function () {
     expect($series->visits->count())->toBe(2);
 });
 
-it('creates visits after a daily timeframe', function () {
+it('creates visit after a default daily timeframe', function () {
     $series = Series::factory()->create();
 
     $series->visit()->withIp();
     Carbon::setTestNow(now()->addDay()->addHour());
     $series->visit()->withIp();
+
+    expect($series->visits->count())->toBe(2);
+});
+
+it('creates visit after an hourly timeframe', function () {
+    $series = Series::factory()->create();
+
+    $series->visit()->hourlyInterval()->withIp();
+    Carbon::setTestNow(now()->addHour()->addMinute());
+    $series->visit()->hourlyInterval()->withIp();
+
+    expect($series->visits->count())->toBe(2);
+});
+
+it('creates visit after a daily timeframe', function () {
+    $series = Series::factory()->create();
+
+    $series->visit()->dailyInterval()->withIp();
+    Carbon::setTestNow(now()->addDay());
+    $series->visit()->dailyInterval()->withIp();
+
+    expect($series->visits->count())->toBe(2);
+});
+
+it('creates visit after a weekly timeframe', function () {
+    $series = Series::factory()->create();
+
+    $series->visit()->weeklyInterval()->withIp();
+    Carbon::setTestNow(now()->addWeek());
+    $series->visit()->weeklyInterval()->withIp();
+
+    expect($series->visits->count())->toBe(2);
+});
+
+it('creates visit after a monthly timeframe', function () {
+    $series = Series::factory()->create();
+
+    $series->visit()->monthlyInterval()->withIp();
+    Carbon::setTestNow(now()->addMonth());
+    $series->visit()->monthlyInterval()->withIp();
+
+    expect($series->visits->count())->toBe(2);
+});
+
+it('creates visit after a custom timeframe', function () {
+    $series = Series::factory()->create();
+
+    $series->visit()->customInterval(now()->subYear())->withIp();
+    Carbon::setTestNow(now()->addYear());
+    $series->visit()->customInterval(now()->subYear())->withIp();
 
     expect($series->visits->count())->toBe(2);
 });

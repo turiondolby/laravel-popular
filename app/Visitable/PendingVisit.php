@@ -5,9 +5,12 @@ namespace App\Visitable;
 use App\Models\User;
 use App\Models\Visit;
 use Illuminate\Database\Eloquent\Model;
+use App\Visitable\Concerns\SetsPendingIntervals;
 
 class PendingVisit
 {
+    use SetsPendingIntervals;
+
     protected $model;
     protected $attributes = [];
     protected $interval;
@@ -16,7 +19,7 @@ class PendingVisit
     {
         $this->model = $model;
 
-        $this->interval = now()->subDay();
+        $this->dailyInterval();
     }
 
     public function withUser(?User $user = null)
