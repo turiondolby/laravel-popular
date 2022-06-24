@@ -4,9 +4,12 @@ namespace App\Visitable;
 
 use App\Models\Visit;
 use Illuminate\Database\Eloquent\Builder;
+use App\Visitable\Concerns\FiltersByPopularityTimeframe;
 
 trait Visitable
 {
+    use FiltersByPopularityTimeframe;
+
     public function visit()
     {
         return new PendingVisit($this);
