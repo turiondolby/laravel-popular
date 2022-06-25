@@ -32,3 +32,19 @@ it('get records by all time popularity', function () {
     expect($series->count())->toEqual(3)
         ->and($series->first()->visits_count_total)->toEqual(2);
 });
+
+it('gets popular records between two dates', function () {
+    $series = Series::factory()->times(2)->create();
+
+    Carbon::setTestNow(Carbon::createFromDate(1989, 11, 16));
+    $series[0]->visit();
+
+    Carbon::setTestNow();
+    $series[0]->visit();
+    $series[1]->visit();
+
+    $series = Series::popularBetween(Carbon::createFromDate(1989, 11, 15), Carbon::createFromDate(1989, 11, 17))->get();
+
+    expect($series->count())->toEqual(1)
+        ->and($series[0]->visit_count)->toEqual(1);
+});
