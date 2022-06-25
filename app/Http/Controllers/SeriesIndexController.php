@@ -9,7 +9,7 @@ class SeriesIndexController extends Controller
     public function __invoke()
     {
         return view('series.index', [
-            'all_series' => Series::withTotalVisitCount()->get()
+            'all_series' => Series::withTotalVisitCount()->popularLastDays(2)->get()
         ]);
     }
 }
