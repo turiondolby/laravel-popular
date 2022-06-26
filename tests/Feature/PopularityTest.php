@@ -62,3 +62,31 @@ it('gets popular records for the last x days', function () {
 
     expect($series->count())->toEqual(1);
 });
+
+it('gets popular records for the last week', function () {
+    $series = Series::factory()->times(2)->create();
+
+    Carbon::setTestNow(now()->subDays(7)->startOfWeek());
+    $series[0]->visit();
+
+    Carbon::setTestNow();
+    $series[1]->visit();
+
+    $series = Series::popularLastWeek()->get();
+
+    expect($series->count())->toEqual(1);
+});
+
+it('gets popular records for this week', function () {
+    $series = Series::factory()->times(2)->create();
+
+    Carbon::setTestNow(now()->subWeek()->subDay());
+    $series[0]->visit();
+
+    Carbon::setTestNow();
+    $series[1]->visit();
+
+    $series = Series::popularThisWeek()->get();
+
+    expect($series->count())->toEqual(1);
+});

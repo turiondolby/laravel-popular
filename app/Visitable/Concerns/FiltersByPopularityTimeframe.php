@@ -25,6 +25,19 @@ trait FiltersByPopularityTimeframe
             ]);
     }
 
+    public function scopePopularLastWeek(Builder $query)
+    {
+        $query->popularBetween(
+            $startOfLastWeek = now()->subDays(7)->startOfWeek(),
+            $startOfLastWeek->copy()->endofWeek()
+        );
+    }
+
+    public function scopePopularThisWeek(Builder $query)
+    {
+        $query->popularBetween(now()->startOfWeek(), now()->endofWeek());
+    }
+
     protected function betweenScope(Carbon $from, Carbon $to)
     {
         return function ($query) use ($from, $to) {
