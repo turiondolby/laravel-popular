@@ -118,3 +118,31 @@ it('gets popular records for last month', function () {
 
     expect($series->count())->toEqual(1);
 });
+
+it('gets popular records for this year', function () {
+    $series = Series::factory()->times(2)->create();
+
+    Carbon::setTestNow(now()->subYear()->subDay());
+    $series[0]->visit();
+
+    Carbon::setTestNow();
+    $series[1]->visit();
+
+    $series = Series::popularThisYear()->get();
+
+    expect($series->count())->toEqual(1);
+});
+
+it('gets popular records for last year', function () {
+    $series = Series::factory()->times(2)->create();
+
+    Carbon::setTestNow(now()->subYear()->startOfYear());
+    $series[0]->visit();
+
+    Carbon::setTestNow();
+    $series[1]->visit();
+
+    $series = Series::popularLastYear()->get();
+
+    expect($series->count())->toEqual(1);
+});
